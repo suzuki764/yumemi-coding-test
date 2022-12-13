@@ -12,8 +12,20 @@ interface Prefecture {
   prefName: string;
 }
 
+interface Population {
+  year: number;
+  value: number;
+}
+
+interface PopulationResponse {
+  label: string;
+  data: Population[];
+}
+
 export default function Home() {
   const [prefs, setPrefs] = useState<Prefecture[]>([]);
+  const [population, setPopulation] = useState<PopulationResponse[]>([]);
+
   useEffect(() => {
     const fetchPrefs = async () => {
       const prefs = await axios.get(BASE_URL + "/prefectures", {
@@ -25,6 +37,26 @@ export default function Home() {
     };
     fetchPrefs();
     console.log(prefs);
+  }, []);
+
+  useEffect(() => {
+    const fetchPopulations = async () => {
+      const response = await axios.get(
+        BASE_URL + "/population/composition/perYear",
+        {
+          headers: {
+            "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
+          },
+          params: {
+            prefCode: 1,
+            cityCode: "-",
+          },
+        }
+      );
+      setPopulation(response.data.result.data as PopulationResponse[]);
+    };
+    fetchPopulations();
+    console.log(population[0]);
   }, []);
 
   return (
