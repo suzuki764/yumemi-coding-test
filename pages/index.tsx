@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { useEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 
 import {
   LineChart,
@@ -32,6 +32,15 @@ interface PopulationResponse {
 export default function Home() {
   const [prefs, setPrefs] = useState<Prefecture[]>([]);
   const [population, setPopulation] = useState<PopulationResponse[]>([]);
+  const [selectedPrefs, setSelectedPrefs] = useState<Prefecture[]>([]);
+
+  const handleChange = (value: Prefecture) => {
+    if (selectedPrefs.includes(value)) {
+      setSelectedPrefs(selectedPrefs.filter((pref) => pref !== value));
+    } else {
+      setSelectedPrefs([...selectedPrefs, value]);
+    }
+  };
 
   useEffect(() => {
     const fetchPrefs = async () => {
@@ -77,19 +86,19 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Population Chart</h1>
+        <div className={styles.checkbox_group}>
+          <ul>
+            {prefs.map((pref) => (
+              <li key={pref.prefCode}>
+                <label>
+                  <input type="checkbox" onChange={() => handleChange(pref)} />
+                  {pref.prefName}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
         <div className={styles.chart}>
-          <div className={styles.checkbox_group}>
-            <ul>
-              {prefs.map((pref) => (
-                <li key={pref.prefCode}>
-                  <label>
-                    <input type="checkbox" />
-                    {pref.prefName}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart margin={{ left: 100, right: 100 }}>
               <XAxis
