@@ -78,6 +78,18 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Population Chart</h1>
         <div className={styles.chart}>
+          <div className={styles.checkbox_group}>
+            <ul>
+              {prefs.map((pref) => (
+                <li key={pref.prefCode}>
+                  <label>
+                    <input type="checkbox" />
+                    {pref.prefName}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart margin={{ left: 100, right: 100 }}>
               <XAxis
