@@ -2,7 +2,14 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 
-import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import axios from "axios";
 
 const BASE_URL = "https://opendata.resas-portal.go.jp/api/v1";
@@ -36,7 +43,6 @@ export default function Home() {
       setPrefs(prefs.data.result as Prefecture[]);
     };
     fetchPrefs();
-    console.log(prefs);
   }, []);
 
   useEffect(() => {
@@ -56,7 +62,6 @@ export default function Home() {
       setPopulation(response.data.result.data as PopulationResponse[]);
     };
     fetchPopulations();
-    console.log(population[0]);
   }, []);
 
   return (
@@ -73,15 +78,24 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Population Chart</h1>
         <div className={styles.chart}>
-          {/* <LineChart width={800} height={400} data={data}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="aichi" stroke="#8884d8" />
-            <Line type="monotone" dataKey="chiba" stroke="#82ca9d" />
-            <Line type="monotone" dataKey="tokyo" stroke="#ffc658" />
-            <Line type="monotone" dataKey="osaka" stroke="#ff0000" />
-          </LineChart> */}
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart margin={{ left: 100, right: 100 }}>
+              <XAxis
+                dataKey="year"
+                allowDuplicatedCategory={false}
+                interval={1}
+              />
+              <YAxis />
+              <Tooltip />
+              <Line
+                data={population[0]?.data ?? []}
+                dataKey="value"
+                stroke="#8884d8"
+                isAnimationActive={false}
+                key="key"
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </main>
 
