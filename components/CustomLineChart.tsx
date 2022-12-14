@@ -12,8 +12,7 @@ import axios from "axios";
 import styles from "./styles/CustomLineChart.module.css";
 import { Prefecture } from "../models/Prefecture";
 import { PopulationData, PopulationResponse } from "../models/Population";
-
-const BASE_URL = "https://opendata.resas-portal.go.jp/api/v1";
+import { RESAS_BASE_URL } from "./utils";
 
 const CustomLineChart = (props: { selected: Prefecture[] }) => {
   const [data, setData] = useState<PopulationData[]>([]);
@@ -21,7 +20,7 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
   useEffect(() => {
     const fetchPopulations = async (prefecture: Prefecture) => {
       const response = await axios.get(
-        BASE_URL + "/population/composition/perYear",
+        RESAS_BASE_URL + "/population/composition/perYear",
         {
           headers: {
             "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,

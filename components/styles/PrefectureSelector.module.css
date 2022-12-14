@@ -1,0 +1,12 @@
+.checkbox_group {
+  margin-top: 2rem;
+  column-count: 5;
+}
+
+.checkbox_group li {
+  list-style: none;
+}
+
+.checkbox_group input {
+  margin-right: 0.5rem;
+}
