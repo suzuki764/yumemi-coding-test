@@ -1,37 +1,15 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
-
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { useEffect, useState } from "react";
 import axios from "axios";
+
+import styles from "../styles/Home.module.css";
+import { Prefecture } from "../models/Prefecture";
+import CustomLineChart from "../components/CustomLineChart";
 
 const BASE_URL = "https://opendata.resas-portal.go.jp/api/v1";
 
-interface Prefecture {
-  prefCode: number;
-  prefName: string;
-}
-
-interface Population {
-  year: number;
-  value: number;
-}
-
-interface PopulationResponse {
-  label: string;
-  data: Population[];
-}
-
 export default function Home() {
   const [prefs, setPrefs] = useState<Prefecture[]>([]);
-  const [population, setPopulation] = useState<PopulationResponse[]>([]);
   const [selectedPrefs, setSelectedPrefs] = useState<Prefecture[]>([]);
 
   const handleChange = (value: Prefecture) => {
@@ -44,33 +22,15 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPrefs = async () => {
-      const prefs = await axios.get(BASE_URL + "/prefectures", {
+      const response = await axios.get(BASE_URL + "/prefectures", {
         headers: {
           "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
         },
       });
-      setPrefs(prefs.data.result as Prefecture[]);
+      console.log(response.data);
+      setPrefs(response.data.result as Prefecture[]);
     };
     fetchPrefs();
-  }, []);
-
-  useEffect(() => {
-    const fetchPopulations = async () => {
-      const response = await axios.get(
-        BASE_URL + "/population/composition/perYear",
-        {
-          headers: {
-            "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
-          },
-          params: {
-            prefCode: 1,
-            cityCode: "-",
-          },
-        }
-      );
-      setPopulation(response.data.result.data as PopulationResponse[]);
-    };
-    fetchPopulations();
   }, []);
 
   return (
@@ -99,24 +59,7 @@ export default function Home() {
           </ul>
         </div>
         <div className={styles.chart}>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart margin={{ left: 100, right: 100 }}>
-              <XAxis
-                dataKey="year"
-                allowDuplicatedCategory={false}
-                interval={1}
-              />
-              <YAxis />
-              <Tooltip />
-              <Line
-                data={population[0]?.data ?? []}
-                dataKey="value"
-                stroke="#8884d8"
-                isAnimationActive={false}
-                key="key"
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <CustomLineChart selected={selectedPrefs} />
         </div>
       </main>
 
