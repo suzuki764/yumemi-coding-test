@@ -11,18 +11,17 @@ import axios from "axios";
 
 import styles from "./styles/CustomLineChart.module.css";
 import { Prefecture, PrefecturePopulation } from "../models/Prefecture";
-import { PopulationData, PopulationResponse } from "../models/Population";
+import { PopulationResponse } from "../models/Population";
 import { RESAS_BASE_URL } from "./utils";
 
 const CustomLineChart = (props: { selected: Prefecture[] }) => {
-  const [data, setData] = useState<PopulationData[]>([]);
+  const [data, setData] = useState<PrefecturePopulation[]>([]);
   const [memo, setMemo] = useState<PrefecturePopulation[]>([]);
 
   useEffect(() => {
     const fetchPopulations = async (prefecture: Prefecture) => {
       if (memo.find((v) => v.prefecture.prefCode === prefecture.prefCode)) {
-        return memo.find((v) => v.prefecture.prefCode === prefecture.prefCode)!
-          .totalPopulation;
+        return memo.find((v) => v.prefecture.prefCode === prefecture.prefCode)!;
       }
       const response = await axios.get(
         RESAS_BASE_URL + "/population/composition/perYear",
@@ -40,7 +39,7 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
         response.data.result as PopulationResponse
       ).data.find((v) => v.label === "総人口")!;
       setMemo([...memo, { prefecture, totalPopulation }]);
-      return totalPopulation;
+      return { prefecture, totalPopulation };
     };
 
     const fetchAllPopulations = async () => {
@@ -59,12 +58,12 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
           <XAxis dataKey="year" allowDuplicatedCategory={false} interval={1} />
           <YAxis />
           <Tooltip />
-          {data.map((population, i) => (
+          {data.map((v) => (
             <Line
-              key={i}
+              key={v.prefecture.prefCode}
               dataKey="value"
-              data={population.data}
-              name={population.label}
+              data={v.totalPopulation.data}
+              name={v.prefecture.prefName}
             />
           ))}
         </LineChart>
