@@ -10,15 +10,20 @@ import {
 import axios from "axios";
 
 import styles from "./styles/CustomLineChart.module.css";
-import { Prefecture } from "../models/Prefecture";
+import { Prefecture, PrefecturePopulation } from "../models/Prefecture";
 import { PopulationData, PopulationResponse } from "../models/Population";
 import { RESAS_BASE_URL } from "./utils";
 
 const CustomLineChart = (props: { selected: Prefecture[] }) => {
   const [data, setData] = useState<PopulationData[]>([]);
+  const [memo, setMemo] = useState<PrefecturePopulation[]>([]);
 
   useEffect(() => {
     const fetchPopulations = async (prefecture: Prefecture) => {
+      if (memo.find((v) => v.prefecture.prefCode === prefecture.prefCode)) {
+        return memo.find((v) => v.prefecture.prefCode === prefecture.prefCode)!
+          .totalPopulation;
+      }
       const response = await axios.get(
         RESAS_BASE_URL + "/population/composition/perYear",
         {
@@ -33,7 +38,8 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
       );
       const totalPopulation = (
         response.data.result as PopulationResponse
-      ).data.find((v) => v.label === "総人口") ?? { label: "", data: [] };
+      ).data.find((v) => v.label === "総人口")!;
+      setMemo([...memo, { prefecture, totalPopulation }]);
       return totalPopulation;
     };
 
