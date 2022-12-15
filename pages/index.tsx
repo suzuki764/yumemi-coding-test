@@ -1,68 +1,21 @@
 import Head from "next/head";
+import { useState } from "react";
+
 import styles from "../styles/Home.module.css";
-import { useEffect, useState } from "react";
-
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import axios from "axios";
-
-const BASE_URL = "https://opendata.resas-portal.go.jp/api/v1";
-
-interface Prefecture {
-  prefCode: number;
-  prefName: string;
-}
-
-interface Population {
-  year: number;
-  value: number;
-}
-
-interface PopulationResponse {
-  label: string;
-  data: Population[];
-}
+import { Prefecture } from "../models/Prefecture";
+import CustomLineChart from "../components/CustomLineChart";
+import PrefectureSelector from "../components/PrefectureSelector";
 
 export default function Home() {
-  const [prefs, setPrefs] = useState<Prefecture[]>([]);
-  const [population, setPopulation] = useState<PopulationResponse[]>([]);
+  const [selectedPrefs, setSelectedPrefs] = useState<Prefecture[]>([]);
 
-  useEffect(() => {
-    const fetchPrefs = async () => {
-      const prefs = await axios.get(BASE_URL + "/prefectures", {
-        headers: {
-          "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
-        },
-      });
-      setPrefs(prefs.data.result as Prefecture[]);
-    };
-    fetchPrefs();
-  }, []);
-
-  useEffect(() => {
-    const fetchPopulations = async () => {
-      const response = await axios.get(
-        BASE_URL + "/population/composition/perYear",
-        {
-          headers: {
-            "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
-          },
-          params: {
-            prefCode: 1,
-            cityCode: "-",
-          },
-        }
-      );
-      setPopulation(response.data.result.data as PopulationResponse[]);
-    };
-    fetchPopulations();
-  }, []);
+  const handleChange = (value: Prefecture) => {
+    if (selectedPrefs.includes(value)) {
+      setSelectedPrefs(selectedPrefs.filter((pref) => pref !== value));
+    } else {
+      setSelectedPrefs([...selectedPrefs, value]);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -77,25 +30,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Population Chart</h1>
+        <>
+          <PrefectureSelector handleChange={handleChange} />
+        </>
         <div className={styles.chart}>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart margin={{ left: 100, right: 100 }}>
-              <XAxis
-                dataKey="year"
-                allowDuplicatedCategory={false}
-                interval={1}
-              />
-              <YAxis />
-              <Tooltip />
-              <Line
-                data={population[0]?.data ?? []}
-                dataKey="value"
-                stroke="#8884d8"
-                isAnimationActive={false}
-                key="key"
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <CustomLineChart selected={selectedPrefs} />
         </div>
       </main>
 
