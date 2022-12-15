@@ -17,7 +17,6 @@ const PrefectureSelector = (props: {
           "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
         },
       });
-      console.log(response.data);
       setPrefs(response.data.result as Prefecture[]);
     };
     fetchPrefs();
