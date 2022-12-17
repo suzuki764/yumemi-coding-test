@@ -1,12 +1,20 @@
-.checkbox_group {
-  margin-top: 2rem;
-  column-count: 5;
-}
-
 .checkbox_group li {
   list-style: none;
 }
 
 .checkbox_group input {
   margin-right: 0.5rem;
+}
+
+@media (min-width: 900px) {
+  .checkbox_group {
+    column-count: 5;
+  }
+}
+
+@media (max-width: 900px) {
+  .checkbox_group {
+    padding: 0 1rem;
+    column-count: 2;
+  }
 }

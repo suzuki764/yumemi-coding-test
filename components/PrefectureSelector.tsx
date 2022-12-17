@@ -3,7 +3,7 @@ import axios from "axios";
 
 import styles from "./styles/PrefectureSelector.module.css";
 import { Prefecture } from "../models/Prefecture";
-import { RESAS_BASE_URL } from "./utils";
+import { RESAS_BASE_URL, calcColor } from "./utils";
 
 const PrefectureSelector = (props: {
   handleChange: (value: Prefecture) => void;
@@ -31,6 +31,9 @@ const PrefectureSelector = (props: {
               <input
                 type="checkbox"
                 onChange={() => props.handleChange(pref)}
+                style={{
+                  accentColor: calcColor(pref.prefCode),
+                }}
               />
               {pref.prefName}
             </label>
