@@ -14,7 +14,7 @@
 
 @media (max-width: 900px) {
   .checkbox_group {
-    margin-right: 3rem;
+    padding: 0 1rem;
     column-count: 2;
   }
 }
