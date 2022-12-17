@@ -8,6 +8,7 @@
   text-align: center;
   background-color: dodgerblue;
   margin-bottom: 3rem;
+  padding: 0.5rem 0;
 }
 
 .header h1 {
@@ -22,13 +23,11 @@
   border-top: 1px solid #eaeaea;
   justify-content: center;
   align-items: center;
+  margin-top: 2rem;
 }
 
 .footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+  color: dodgerblue;
 }
 
 .chart {

@@ -39,7 +39,12 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className={styles.footer}></footer>
+      <footer className={styles.footer}>
+        出典：
+        <a href="https://opendata.resas-portal.go.jp/">
+          RESAS（地域経済分析システム）
+        </a>
+      </footer>
     </>
   );
 }
