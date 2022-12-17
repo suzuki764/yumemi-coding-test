@@ -18,7 +18,7 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Population Chart</title>
         <meta

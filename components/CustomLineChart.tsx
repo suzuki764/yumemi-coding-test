@@ -6,6 +6,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   Line,
+  Label,
+  Legend,
 } from "recharts";
 import axios from "axios";
 
@@ -53,11 +55,26 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
 
   return (
     <div className={styles.main}>
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart margin={{ left: 100, right: 100 }}>
-          <XAxis dataKey="year" allowDuplicatedCategory={false} interval={1} />
-          <YAxis />
+      <ResponsiveContainer minWidth={600} aspect={2}>
+        <LineChart margin={{ top: 40, left: 5, right: 50 }}>
+          <XAxis
+            type="number"
+            dataKey="year"
+            allowDuplicatedCategory={false}
+            angle={-45}
+            allowDataOverflow
+            domain={["dataMin", 2020]}
+          >
+            <Label value="年度" offset={15} position="right" />
+          </XAxis>
+          <YAxis
+            tickFormatter={(v: number) => (v / 10000).toString()}
+            unit="万"
+          >
+            <Label value="人口数" offset={20} position="top" />
+          </YAxis>
           <Tooltip />
+          <Legend />
           {data.map((v) => (
             <Line
               key={v.prefecture.prefCode}
