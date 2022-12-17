@@ -55,7 +55,7 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
 
   return (
     <div className={styles.main}>
-      <ResponsiveContainer minWidth={600} aspect={2}>
+      <ResponsiveContainer width="100%" aspect={2}>
         <LineChart margin={{ top: 40, left: 5, right: 50 }}>
           <XAxis
             type="number"
