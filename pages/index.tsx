@@ -18,7 +18,7 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <>
       <Head>
         <title>Population Chart</title>
         <meta
@@ -27,9 +27,10 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
+      <header className={styles.header}>
         <h1 className={styles.title}>Population Chart</h1>
+      </header>
+      <main className={styles.main}>
         <>
           <PrefectureSelector handleChange={handleChange} />
         </>
@@ -39,6 +40,6 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}></footer>
-    </div>
+    </>
   );
 }
