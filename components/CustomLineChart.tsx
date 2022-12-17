@@ -14,7 +14,7 @@ import axios from "axios";
 import styles from "./styles/CustomLineChart.module.css";
 import { Prefecture, PrefecturePopulation } from "../models/Prefecture";
 import { PopulationResponse } from "../models/Population";
-import { RESAS_BASE_URL } from "./utils";
+import { RESAS_BASE_URL, calcColor } from "./utils";
 
 const CustomLineChart = (props: { selected: Prefecture[] }) => {
   const [data, setData] = useState<PrefecturePopulation[]>([]);
@@ -81,6 +81,7 @@ const CustomLineChart = (props: { selected: Prefecture[] }) => {
               dataKey="value"
               data={v.totalPopulation.data}
               name={v.prefecture.prefName}
+              stroke={calcColor(v.prefecture.prefCode)}
             />
           ))}
         </LineChart>
